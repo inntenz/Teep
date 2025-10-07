@@ -1,17 +1,17 @@
-import express from "express";
-import cors from "cors";
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Testroute für Registrierung
-app.post("/register", (req, res) => {
-  // refer-Code aus Query-Param oder Header holen
-  const referCode =
-    req.query.refer || req.headers.refer || null;
+// Ordner 'public' für statische Dateien freigeben
+app.use(express.static(path.join(__dirname, "public")));
 
-  // Daten aus Body
+// Beispielroute (z. B. POST /register)
+app.post("/register", (req, res) => {
+  const referCode = req.query.refer || req.headers.refer || null;
   const { username } = req.body;
 
   console.log("Neuer Registrierungsversuch:");
