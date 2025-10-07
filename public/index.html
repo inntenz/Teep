@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Refer-Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 50px;
+            
+        }
+        input, button {
+            padding: 10px;
+            
+            font-size: 16px;
+            border-radius: 0;
+            box-sizing: border-box;
+            background: none;
+            color: white;
+            width: 100%;
+            border: 1px solid white;
+            
+        }
+        input { 
+            padding: 15px;
+        }
+        .formcontainer {
+            width: 30vw;
+            max-width: 400px;
+            background-color: black;
+            border-radius: 15px;
+            padding: 12.5px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        form button {
+            margin-top: 15px;
+        }
+        .padding-7 {
+            padding: 7px;
+        }
+
+        .active {
+            background-color: blueviolet;
+        }
+        .formhr {
+            margin-left: -12.5px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            width: calc(100% + 25px);
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background-color: white;
+            width: 100%;
+            
+        }
+        .formselector {
+            display: flex;
+            flex-direction: row;
+        }
+        .formselector button{
+            width: 50%;
+        }
+        .google button{
+            background-color: darkred;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="formcontainer">
+        <div class="formselector" id="formselector">
+            <button type="button" id="loginformselector" class="active formselectorbutton">Login</button>
+            <button type="button" id="registerformselector" class="formselectorbutton">Register</button>
+        </div>
+        <hr class="formhr">
+
+        <form class="form" id="loginform">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+
+        <form class="form" id="registerform" style="display: none;">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit">Register</button>
+        </form>
+
+        <hr class="formhr">
+        <a type="button" class="google" href="/auth/google"><button>Google</button></a>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById("loginformselector");
+        const registerBtn = document.getElementById("registerformselector");
+        const loginForm = document.getElementById("loginform");
+        const registerForm = document.getElementById("registerform");
+
+        // Umschalten der Formulare beim Klick
+        loginBtn.addEventListener("click", () => {
+            loginBtn.classList.add("active");
+            registerBtn.classList.remove("active");
+            loginForm.style.display = "flex";
+            registerForm.style.display = "none";
+        });
+
+        registerBtn.addEventListener("click", () => {
+            registerBtn.classList.add("active");
+            loginBtn.classList.remove("active");
+            registerForm.style.display = "flex";
+            loginForm.style.display = "none";
+        });
+
+        // Beispiel-Handler (du kannst hier je nach Button POST-Ziel anpassen)
+        document.getElementById("loginform").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert("Login Antwort: " + JSON.stringify(result));
+        });
+
+        document.getElementById("registerform").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert("Register Antwort: " + JSON.stringify(result));
+        });
+    </script>
+</body>
+</html>
