@@ -11,18 +11,16 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Beispielroute (z. B. POST /register)
 app.post("/register", (req, res) => {
-  const referCode = req.query.refer || req.headers.refer || null;
-  const { username } = req.body;
+  const referUrl = req.headers.referer; // komplette Seiten-URL
+  let referCode = null;
 
-  console.log("Neuer Registrierungsversuch:");
-  console.log("Username:", username);
+  if (referUrl) {
+    const url = new URL(referUrl);
+    referCode = url.searchParams.get("refer");
+  }
+
   console.log("Refer-Code:", referCode);
-
-  res.json({
-    success: true,
-    username,
-    refer: referCode,
-  });
+  res.json({ success: true, refer: referCode });
 });
 
 const PORT = 3000;
